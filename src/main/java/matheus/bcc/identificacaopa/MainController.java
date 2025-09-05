@@ -1,11 +1,8 @@
 package matheus.bcc.identificacaopa;
 
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -18,34 +15,13 @@ import java.nio.file.Files;
 import java.util.List;
 
 public class MainController {
-    public Label tipo;
-    public Label simples;
-    public Label regular;
-    public Label orientado;
-    public Label completo;
-    public HBox hbEmissao;
-    public Label emissao;
-    public HBox hbRecepcao;
-    public Label recepcao;
-    public Label labelK;
-    public VBox matrizContainer;
     public VBox listaContainer;
     public VBox lista;
-    @FXML
-    private GridPane matrizGrid;
-    private String[][] matriz;
     private Lista[] listaVertices;
-    private int linhas, colunas;
-    private char[] vetVertices;
-    private String[] vetIncidencias;
-
-
 
     private void exibirLista() {
-        matrizGrid.getChildren().clear();
         lista.getChildren().clear();
         listaContainer.setVisible(true);
-        matrizContainer.setVisible(false);
         listaContainer.setMaxWidth(Region.USE_PREF_SIZE);
 
         for (Lista v : listaVertices) {
@@ -100,9 +76,7 @@ public class MainController {
                 }
                 exibirLista();
             } catch (Exception e) {
-                matrizGrid.getChildren().clear();
                 lista.getChildren().clear();
-                tipo.setText("Arquivo inválido");
             }
         }
     }
