@@ -14,7 +14,7 @@ public class MainApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("Representação Computacional de Grafos - Identificação do Ponto de Articulação");
+        stage.setTitle("Gestão de Projetos - Identificação de Pontos de Articulação");
         stage.setScene(scene);
         try {
             InputStream caminhoIcone = getClass().getResourceAsStream("/icone/grafo.png");
@@ -25,6 +25,7 @@ public class MainApplication extends Application {
         } catch (Exception e) {
             System.err.println("Erro ao carregar o ícone: " + e.getMessage());
         }
+
         stage.setMaximized(true);
         stage.show();
     }
