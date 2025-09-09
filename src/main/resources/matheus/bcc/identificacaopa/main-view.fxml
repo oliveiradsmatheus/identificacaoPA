@@ -49,37 +49,39 @@
     </left>
     <center>
         <VBox fx:id="matrizContainer" alignment="CENTER" style="-fx-background-color: #fef9ef;" BorderPane.alignment="CENTER">
-            <Label fx:id="lbTabela" text="Identificação de Tarefas Críticas" visible="false">
-                <font>
-                    <Font name="System Bold" size="24.0" />
-                </font>
-                <VBox.margin>
-                    <Insets bottom="10.0" />
-                </VBox.margin>
-            </Label>
-            <GridPane fx:id="matrizGrid" alignment="CENTER" hgap="5.0" vgap="5.0">
-                <padding>
-                    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                </padding>
-            </GridPane>
-            <HBox alignment="CENTER">
-                <Label fx:id="lbMsg">
+            <VBox fx:id="tabela" alignment="CENTER" visible="false">
+                <Label text="Identificação de Tarefas Críticas">
                     <font>
-                        <Font name="System" size="21.0" />
+                        <Font name="System Bold" size="24.0" />
                     </font>
                     <VBox.margin>
                         <Insets bottom="10.0" />
                     </VBox.margin>
                 </Label>
-                <Label fx:id="lbPontos">
-                    <font>
-                        <Font name="System Bold" size="21.0" />
-                    </font>
-                    <VBox.margin>
-                        <Insets bottom="10.0" />
-                    </VBox.margin>
-                </Label>
-            </HBox>
+                <GridPane fx:id="matrizGrid" alignment="CENTER" hgap="5.0" vgap="5.0">
+                    <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                    </padding>
+                </GridPane>
+                <HBox alignment="CENTER">
+                    <Label fx:id="lbMsg">
+                        <font>
+                            <Font name="System" size="21.0" />
+                        </font>
+                        <VBox.margin>
+                            <Insets bottom="10.0" />
+                        </VBox.margin>
+                    </Label>
+                    <Label fx:id="lbPontos">
+                        <font>
+                            <Font name="System Bold" size="21.0" />
+                        </font>
+                        <VBox.margin>
+                            <Insets bottom="10.0" />
+                        </VBox.margin>
+                    </Label>
+                </HBox>
+            </VBox>
         </VBox>
     </center>
 </BorderPane>

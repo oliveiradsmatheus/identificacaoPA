@@ -19,9 +19,10 @@ public class MainController {
     public VBox lista;
     public GridPane matrizGrid;
     public VBox matrizContainer;
-    public Label lbTabela;
+    public VBox tabela;
     public Label lbMsg;
     public Label lbPontos;
+    public HBox hbMensagem;
 
     private VBox tabelaContainer;
 
@@ -81,7 +82,7 @@ public class MainController {
 
     private void exibirMatriz() {
         matrizGrid.getChildren().clear();
-        lbTabela.setVisible(true);
+        tabela.setVisible(true);
         matrizContainer.setVisible(true);
         Label cabecalho;
         String[] valor = {"Tarefa", "Pai", "Prenum Busca", "Prenum (--)", "Menor", "Análise"}; // Cabeçalhos da matriz de informação.
@@ -141,18 +142,20 @@ public class MainController {
         if (arq != null) {
             try {
                 matrizGrid.getChildren().clear();
-                lbTabela.setVisible(false);
+                tabela.setVisible(false);
+                lbMsg.setText("");
+                lbPontos.setText("");
                 List<String> linhas = Files.readAllLines(arq.toPath());
                 linhasV = linhas.size() - 1;
                 vertices = new Lista[linhasV];
                 int i = 0;
                 for (int j = 0; j < linhas.getFirst().length(); j++)
-                    if (linhas.getFirst().charAt(j) != '\t')
+                    if (linhas.getFirst().charAt(j) != '\t' && linhas.getFirst().charAt(j) != ' ')
                         vertices[i++] = new Lista(linhas.getFirst().charAt(j));
                 for (i = 1; i < linhas.size(); i ++) {
                     int j = 0;
                     while (j < linhas.get(i).length()) {
-                        if (linhas.get(i).charAt(j) != '\t')
+                        if (linhas.get(i).charAt(j) != '\t' && linhas.getFirst().charAt(j) != ' ')
                             vertices[i - 1].inserir(linhas.get(i).charAt(j));
                         j++;
                     }
