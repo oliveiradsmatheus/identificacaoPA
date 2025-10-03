@@ -1,15 +1,24 @@
 package matheus.bcc.identificacaopa;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import matheus.bcc.identificacaopa.arquivo.Arquivo;
+import matheus.bcc.identificacaopa.fila.Fila;
+import matheus.bcc.identificacaopa.fila.NoF;
 import matheus.bcc.identificacaopa.lista.Lista;
 import matheus.bcc.identificacaopa.lista.No;
 
 import java.io.File;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +35,11 @@ public class MainController {
 
     private VBox tabelaContainer;
 
-    private Lista[] vertices;
+    public static Lista[] vertices;
     private int linhasV;
     private int[][] matriz;
+    static int[][] cores;
+    private int contador;
 
     private void exibirLista() {
         lista.getChildren().clear();
@@ -150,12 +161,12 @@ public class MainController {
                 vertices = new Lista[linhasV];
                 int i = 0;
                 for (int j = 0; j < linhas.getFirst().length(); j++)
-                    if (linhas.getFirst().charAt(j) != '\t' && linhas.getFirst().charAt(j) != ' ')
+                    if (linhas.getFirst().charAt(j) != ' ')
                         vertices[i++] = new Lista(linhas.getFirst().charAt(j));
                 for (i = 1; i < linhas.size(); i ++) {
-                    int j = 0;
+                    int j = 2;
                     while (j < linhas.get(i).length()) {
-                        if (linhas.get(i).charAt(j) != '\t' && linhas.getFirst().charAt(j) != ' ')
+                        if (linhas.getFirst().charAt(j) != ' ')
                             vertices[i - 1].inserir(linhas.get(i).charAt(j));
                         j++;
                     }
@@ -209,7 +220,8 @@ public class MainController {
             v.limparVisitas();
         for (int i = 0; i < linhasV; i++)
             matriz[i][0] = vertices[i].getInicio().getInfo();
-        prenumBusca(matriz, 0, vertices[0].getInicio(), 1);
+        contador = 1;
+        prenumBusca(matriz, 0, vertices[0].getInicio());
         prenum(matriz);
         analisar(matriz);
         exibirMatriz();
@@ -259,6 +271,7 @@ public class MainController {
     private int[] ordemGrafo(int[][] matriz) {
         int[] ordem = new int[linhasV];
         int pos = linhasV, TL = 0;
+
         while (pos > 0)
             for (int i = 0; i < linhasV; i++)
                 if (matriz[i][2] == pos) {
@@ -342,7 +355,7 @@ public class MainController {
         }
     }
 
-    private void prenumBusca(int[][] mat, int pos, No pai, int cont) {
+    private void prenumBusca(int[][] mat, int pos, No pai) {
         if (pos < linhasV && vertices[pos] != null) {
             No info = vertices[pos].getInicio();
             if  (!info.isVisitado()) {
@@ -351,17 +364,98 @@ public class MainController {
                 int i = buscaPos(mat);
                 if (i != -1) {
                     mat[pos][1] = pai.getInfo();
-                    mat[pos][2] = cont;
+                    mat[pos][2] = contador++;
                     char infoChar = vertices[pos].dfs();
                     int novaPos = buscaNo(infoChar);
                     while (novaPos < linhasV) {
-                        prenumBusca(mat, novaPos, info, cont + 1);
+                        prenumBusca(mat, novaPos, info);
                         infoChar = vertices[pos].dfs();
                         novaPos = buscaNo(infoChar);
-                        cont++;
                     }
                 }
             }
+        }
+    }
+
+    public int buscarNo(char info) {
+        int i = 0;
+        while(i < vertices.length && vertices[i].getInicio().getInfo() != info)
+            i++;
+        if (i < vertices.length)
+            return i;
+        return -1;
+    }
+
+    public void onColorir(ActionEvent actionEvent) throws Exception {
+        Fila fila = new Fila();
+        cores = new int[vertices.length][vertices.length];
+        NoF aux;
+        int pos;
+
+        for(Lista v : vertices)
+            v.limparVisitas();
+
+        fila.inserir(vertices[0].getInicio().getInfo());
+        while(!fila.isEmpty()) {
+            aux = fila.remover();
+            pos = buscarNo(aux.getInfo());
+            for(Lista vertice : vertices)
+                vertice.visitar(aux.getInfo());
+            colorir(cores, pos);
+            adicionarNaFila(fila, pos);
+        }
+        colorirQuadros();
+    }
+
+    public void colorirQuadros() throws Exception {
+        Stage stage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("grafo-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+
+        stage.setTitle("Coloração");
+        stage.setScene(scene);
+        stage.initStyle(StageStyle.UTILITY);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setResizable(false);
+
+        InputStream caminhoIcone = getClass().getResourceAsStream("/icone/grafo.png");
+        if (caminhoIcone != null) {
+            Image icone = new Image(caminhoIcone);
+            stage.getIcons().add(icone);
+        }
+
+        stage.setMaximized(true);
+        stage.showAndWait();
+    }
+
+    public void adicionarNaFila(Fila fila, int pos) {
+        No aux = vertices[pos].getInicio().getProx();
+        while (aux != null) {
+            if (!aux.isVisitado())
+                fila.inserir(aux.getInfo());
+            aux = aux.getProx();
+        }
+    }
+
+    public void colorir (int[][] cores, int pos) {
+        int i = 0;
+        while (i < cores.length && cores[pos][i] != 0)
+            i++;
+        if (i < cores.length) {
+            cores[pos][i] = i + 1;
+            vertices[pos].getInicio().setCor(i + 1);
+            for (Lista v : vertices)
+                v.colorir(vertices[pos].getInicio().getInfo(), i+1);
+            marcar(cores, pos, i);
+        }
+    }
+
+    public void marcar (int[][] cores, int pos, int i) {
+        No aux = vertices[pos].getInicio().getProx();
+        while (aux != null) {
+            pos = buscarNo(aux.getInfo());
+            cores[pos][i] = -1;
+            aux = aux.getProx();
         }
     }
 }

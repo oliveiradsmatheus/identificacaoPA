@@ -55,4 +55,13 @@ public class Lista {
             aux = aux.getProx();
         }
     }
+
+    public void colorir(char info, int cor) {
+        No aux = inicio;
+        while (aux != null) {
+            if  (aux.getInfo() == info)
+                aux.setCor(cor);
+            aux = aux.getProx();
+        }
+    }
 }

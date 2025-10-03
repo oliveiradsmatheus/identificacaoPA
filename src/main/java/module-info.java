@@ -3,6 +3,7 @@ module matheus.bcc.identificacaopa {
     requires javafx.fxml;
     requires javafx.graphics;
     requires java.desktop;
+    requires jdk.compiler;
 
 
     opens matheus.bcc.identificacaopa to javafx.fxml;
