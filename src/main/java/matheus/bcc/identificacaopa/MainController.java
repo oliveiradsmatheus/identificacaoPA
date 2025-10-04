@@ -395,7 +395,7 @@ public class MainController {
         for(Lista v : vertices)
             v.limparVisitas();
 
-        fila.inserir(vertices[0].getInicio().getInfo());
+        fila.inserir(vertices[0].getInicio().getInfo(), vertices[0].getGrau());
         while(!fila.isEmpty()) {
             aux = fila.remover();
             pos = buscarNo(aux.getInfo());
@@ -403,6 +403,7 @@ public class MainController {
                 vertice.visitar(aux.getInfo());
             colorir(cores, pos);
             adicionarNaFila(fila, pos);
+            fila.exibirFila();
         }
         colorirQuadros();
     }
@@ -431,11 +432,20 @@ public class MainController {
     public void adicionarNaFila(Fila fila, int pos) {
         No aux = vertices[pos].getInicio().getProx();
         while (aux != null) {
-            if (!aux.isVisitado())
-                fila.inserir(aux.getInfo());
+            int posListaNo = buscarNo(aux.getInfo());//buscar indece da lista de cada no que o aux aponta pra pegar o grau e ver se ja foi inserido na lista
+            if (posListaNo != -1) {
+                //enfileira se ainda não visitado
+                if (!vertices[posListaNo].getInicio().isVisitado()) {
+                    //se n foi visitado insere
+                    fila.inserir(aux.getInfo(), vertices[posListaNo].getGrau());
+                    // marca como visitado depois de inserir na fila
+                    vertices[posListaNo].getInicio().setVisitado(true);
+                }
+            }
             aux = aux.getProx();
         }
     }
+
 
     public void colorir (int[][] cores, int pos) {
         int i = 0;

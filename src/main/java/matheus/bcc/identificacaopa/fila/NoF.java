@@ -2,10 +2,12 @@ package matheus.bcc.identificacaopa.fila;
 
 public class NoF {
     char info;
+    int grau;
     NoF prox;
 
-    public NoF(char info) {
+    public NoF(char info, int grau) {
         this.info = info;
+        this.grau = grau;
     }
 
     public char getInfo() {
@@ -14,6 +16,14 @@ public class NoF {
 
     public void setInfo(char info) {
         this.info = info;
+    }
+
+    public int getGrau() {
+        return grau;
+    }
+
+    public void setGrau(int grau) {
+        this.grau = grau;
     }
 
     public NoF getProx() {
